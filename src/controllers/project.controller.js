@@ -8,7 +8,7 @@ import { asyncHandler } from "../utils/async-handler.js";
 import jwt from "jsonwebtoken"
 import crypto from "crypto"
 import mongoose, { Mongoose } from "mongoose";
-import { UserRolesEnum } from "../utils/constants.js";
+import { AvailableUserRole, UserRolesEnum } from "../utils/constants.js";
 
 const getProjects=asyncHandler(async (req,res)=>{
     const projects=await ProjectMember.aggregate([
@@ -217,11 +217,53 @@ const getProjectMembers=asyncHandler(async (req,res)=>{
 })
 
 const updateMemberRole=asyncHandler(async (req,res)=>{
-    
+    const {projectId,userId}=req.params
+    const {newRole}=req.body
+    if(!AvailableUserRole.includes(newRole)){
+        throw new ApiError(400,"Invalid Role")
+    }
+    let projectMember= await ProjectMember.findOne({
+        project:new mongoose.Types.ObjectId(projectId),
+        user:new mongoose.Types.ObjectId(userId)
+    })
+
+    if(!projectMember){
+        throw new ApiError(400,"Project member not found")
+    }
+
+    projectMember=await ProjectMember.findByIdAndUpdate(projectMember,
+        {
+            role:newRole
+        },
+        {new:true}
+    )
+
+    if(!projectMember){
+        throw new ApiError(400,"Project member not found")
+    }
+
+    return res.status(200).json(new ApiResponse(200,projectMember,"Project Member Role updated successfully"))
 })
 
 const deleteMember=asyncHandler(async (req,res)=>{
+    const {projectId,userId}=req.params
     
+    let projectMember= await ProjectMember.findOne({
+        project:new mongoose.Types.ObjectId(projectId),
+        user:new mongoose.Types.ObjectId(userId)
+    })
+
+    if(!projectMember){
+        throw new ApiError(400,"Project member not found")
+    }
+
+    projectMember=await ProjectMember.findByIdAndDelete(projectMember)
+
+    if(!projectMember){
+        throw new ApiError(400,"Project member not found")
+    }
+
+    return res.status(200).json(new ApiResponse(200,projectMember,"Project Member deleted successfully"))
 })
 
 export {
@@ -232,5 +274,6 @@ export {
     createProject,
     updateMemberRole,
     updateProject,
-    deleteProject
+    deleteProject,
+    deleteMember
 }
