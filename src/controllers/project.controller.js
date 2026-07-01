@@ -142,7 +142,7 @@ const addMembersToProject=asyncHandler(async (req,res)=>{
     if(!user){
         throw new ApiError(404,"User does not exist")
     }
-    await ProjectMember.findByIdAndUpdate(
+    await ProjectMember.findOneAndUpdate(
         {
             user:new mongoose.Types.ObjectId(user._id),
             project: new mongoose.Types.ObjectId(projectId)
