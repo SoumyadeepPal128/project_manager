@@ -37,7 +37,7 @@ const createTask=asyncHandler(async (req,res)=>{
     }
     const files=req.files || []
 
-    files.map((file)=>{
+    const attachments=files.map((file)=>{
         return {
             url:`${process.env.SERVER_URL}/images/${file.originalname}`,
             mimetype:file.mimetype,
@@ -49,7 +49,7 @@ const createTask=asyncHandler(async (req,res)=>{
         title,
         description,
         project:new mongoose.Types.ObjectId(projectId),
-        assingedTo: assignedTo ? new mongoose.Types.ObjectId(assignedTo):undefined,
+        assignedTo: assignedTo ? new mongoose.Types.ObjectId(assignedTo):undefined,
         status,
         assignedBy: new mongoose.Types.ObjectId(req.user._id),
         attachments
@@ -113,7 +113,7 @@ const getTaskById=asyncHandler(async (req,res)=>{
                     {
                         $addFields:{
                             createdBy:{
-                                $arratElemAt:["$createdBy",0]
+                                $arrayElemAt:["$createdBy",0]
                             }
                         }
                     }
@@ -137,23 +137,76 @@ const getTaskById=asyncHandler(async (req,res)=>{
 })
 
 const updateTask=asyncHandler(async (req,res)=>{
-    
+    const {taskId}=req.params
+    const {title,description,assignedTo,status}=req.body
+
+    const task=await Task.findByIdAndUpdate(
+        taskId,
+        { title, description, assignedTo, status },
+        { new:true }
+    )
+
+    if(!task){
+        throw new ApiError(404,"Task not found")
+    }
+    return res.status(200).json(new ApiResponse(200,task,"Task updated successfully"))
 })
 
 const deleteTask=asyncHandler(async (req,res)=>{
-    
+    const {taskId}=req.params
+    const task=await Task.findByIdAndDelete(taskId)
+
+    if(!task){
+        throw new ApiError(404,"Task not found")
+    }
+    // also clean up its subtasks
+    await Subtask.deleteMany({ task: taskId })
+
+    return res.status(200).json(new ApiResponse(200,task,"Task deleted successfully"))
 })
 
 const createSubTask=asyncHandler(async (req,res)=>{
-    
+    const {taskId}=req.params
+    const {title}=req.body
+
+    const task=await Task.findById(taskId)
+    if(!task){
+        throw new ApiError(404,"Task not found")
+    }
+
+    const subtask=await Subtask.create({
+        title,
+        task: new mongoose.Types.ObjectId(taskId),
+        createdBy: new mongoose.Types.ObjectId(req.user._id)
+    })
+
+    return res.status(201).json(new ApiResponse(201,subtask,"Subtask created successfully"))
 })
 
 const updateSubTask=asyncHandler(async (req,res)=>{
-    
+    const {subtaskId}=req.params
+    const {title,isCompleted}=req.body
+
+    const subtask=await Subtask.findByIdAndUpdate(
+        subtaskId,
+        { title, isCompleted },
+        { new:true }
+    )
+
+    if(!subtask){
+        throw new ApiError(404,"Subtask not found")
+    }
+    return res.status(200).json(new ApiResponse(200,subtask,"Subtask updated successfully"))
 })
 
 const deleteSubTask=asyncHandler(async (req,res)=>{
-    
+    const {subtaskId}=req.params
+    const subtask=await Subtask.findByIdAndDelete(subtaskId)
+
+    if(!subtask){
+        throw new ApiError(404,"Subtask not found")
+    }
+    return res.status(200).json(new ApiResponse(200,subtask,"Subtask deleted successfully"))
 })
 
 export {

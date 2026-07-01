@@ -13,7 +13,7 @@ const taskSchema=new Schema({
         ref:"Project",
         required:true,
     },
-    assingedTo:{
+    assignedTo:{
         type:Schema.Types.ObjectId,
         ref:"User",
         //required:true,

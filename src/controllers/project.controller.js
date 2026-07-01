@@ -20,7 +20,7 @@ const getProjects=asyncHandler(async (req,res)=>{
         {
             $lookup:{
                 from:"projects",
-                localField:"projects",
+                localField:"project",
                 foreignField:"_id",
                 as:"projects",
                 pipeline:[
@@ -28,7 +28,7 @@ const getProjects=asyncHandler(async (req,res)=>{
                         $lookup:{
                             from:"projectmembers",
                             localField:"_id",
-                            foreignField:"projects",
+                            foreignField:"project",
                             as:"projectmembers"
                         }
                     },
@@ -163,7 +163,7 @@ const addMembersToProject=asyncHandler(async (req,res)=>{
 
 const getProjectMembers=asyncHandler(async (req,res)=>{
     const {projectId}=req.params
-    const project= await Project.findById(req.params)
+    const project= await Project.findById(projectId)
 
     if(!project){
         throw new ApiError(404,"Project not found")

@@ -9,13 +9,11 @@
     "start": "node src/index.js"
   },
   "keywords": [
-    "udemy",
-    "course",
     "backend",
     "API",
     "creation"
   ],
-  "author": "hitesh choudhary",
+  "author": "soumyadeep",
   "license": "ISC",
   "devDependencies": {
     "nodemon": "^3.1.10",
