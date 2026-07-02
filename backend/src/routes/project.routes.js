@@ -1,5 +1,6 @@
 import { Router } from "express";
-import {addMembersToProject,
+import {
+    addMembersToProject,
     getProjectById,
     getProjectMembers,
     getProjects,
@@ -7,19 +8,15 @@ import {addMembersToProject,
     updateMemberRole,
     updateProject,
     deleteProject,
-    deleteMember} from "../controllers/project.controller.js"
-import { validate,v } from "../middlewares/validator.middleware.js";
-import {createProjectValidator,addMembertoProjectValidator} from "../validators/index.js"
-import { verifyJWT,validateProjectPermission } from "../middlewares/auth.middleware.js";
+    deleteMember
+} from "../controllers/project.controller.js"
+import { validate } from "../middlewares/validator.middleware.js";
+import { verifyJWT, validateProjectPermission } from "../middlewares/auth.middleware.js";
 import { AvailableUserRole, UserRolesEnum } from "../utils/constants.js";
-import {userRegisterValidator,
-  userLoginValidator,
-  userChangeCurrentPasswordValidator,
-  userForgotPasswordValidator,
-  userResetForgotPasswordValidator,
-  createProjectValidator,
-  addMembertoProjectValidator,}
-  from "../validators/index.js"
+import {
+    createProjectValidator,
+    addMembertoProjectValidator
+} from "../validators/index.js"
 
 const router = Router();
 router.use(verifyJWT)
