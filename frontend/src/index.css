@@ -1,1 +1,62 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --bg: #FAF9F6;
+  --bg-subtle: #F0EEE8;
+  --surface: #FFFFFF;
+  --border: #E0DDD3;
+  --ink: #1C1B19;
+  --ink-muted: #6B6759;
+  --accent: #2B3A67;
+  --accent-hover: #1F2B4D;
+  --accent-fg: #FAF9F6;
+  --status-todo: #8A8574;
+  --status-progress: #C9922A;
+  --status-done: #5F7A61;
+  --danger: #B3491F;
+}
+
+.dark {
+  --bg: #16151A;
+  --bg-subtle: #1E1D23;
+  --surface: #232228;
+  --border: #34323A;
+  --ink: #EDEAE2;
+  --ink-muted: #9A968C;
+  --accent: #8393C7;
+  --accent-hover: #9AAADC;
+  --accent-fg: #16151A;
+  --status-todo: #9A968C;
+  --status-progress: #E0AC4F;
+  --status-done: #7FA080;
+  --danger: #D9714E;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-fg: var(--accent-fg);
+  --color-status-todo: var(--status-todo);
+  --color-status-progress: var(--status-progress);
+  --color-status-done: var(--status-done);
+  --color-danger: var(--danger);
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
