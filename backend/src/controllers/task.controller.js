@@ -77,10 +77,12 @@ const getTaskById=asyncHandler(async (req,res)=>{
                 as:"assignedTo",
                 pipeline:[
                     {
-                        _id:1,
-                        username:1,
-                        fullName:1,
-                        avatar:1
+                        $project:{          
+                            _id:1,
+                            username:1,
+                            fullName:1,
+                            avatar:1
+                        }
                     }
                 ]
             }
@@ -133,7 +135,7 @@ const getTaskById=asyncHandler(async (req,res)=>{
         throw new ApiError(404,"Task Not Found")
     }
     return res.status(200)
-    .json(new ApiResponse(200,task,"Task fetched successfully"))
+    .json(new ApiResponse(200,task[0],"Task fetched successfully"))
 })
 
 const updateTask=asyncHandler(async (req,res)=>{
