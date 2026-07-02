@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import ProjectBoard from "./pages/ProjectBoard";
 import ProjectMembers from "./pages/ProjectMembers";
+import { useThemeStore } from "./store/themeStore";
 
 function App() {
   const getCurrentUser = useAuthStore((state) => state.getCurrentUser);
@@ -14,7 +15,11 @@ function App() {
   useEffect(() => {
     getCurrentUser();
   }, [getCurrentUser]);
+  const initTheme = useThemeStore((state) => state.initTheme);
 
+  useEffect(() => {
+    initTheme();
+  }, []);
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
